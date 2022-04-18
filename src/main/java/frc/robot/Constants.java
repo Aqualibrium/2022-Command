@@ -21,6 +21,8 @@ public final class Constants {
         public static int drY = 4;
         public static int drLB = 5;
         public static int drRB = 6;
+        public static int drLT = 7;
+        public static int drRT = 8;
         //operator
         public static int opStick = 1;
         public static int op1 = 1;
@@ -62,12 +64,34 @@ public final class Constants {
         // Intake
         public static final int convey = 30;
         public static final int elevate = 31;
+        public static final int intakeArm = 32;
+        public static final int intake = 33;
+        public static final double intakeSpd = 0.7;
+        public static final double inArmUp = 0.6;
+        public static final double inArmDn = -0.7;
 
         // Shooter
         public static final int shootL = 20;
         public static final int shootR = 21;
         public static final int tiltMotor = 42;
+        // tilt motor PID
+        public static final double kTiltP = 0.04;
+        public static final double kTiltI = 0.00;
+        public static final double kTiltD = 0.10;
 
+        // shooter speed vs range
+        public static final double shoot5ft = 0.65;
+        public static final int autotilt = -16;
+        public static final int tilt1 = -27;
+        public static final int tilt2 = -20;
+        public static final int tilt3 = -43;
+        public static final int tilt4 = -47;
+        public static final int tilt5 = -16;
+        public static final double shoot10ft = 0.70;
+        public static final double shoot15ft = 0.78;
+        public static final double shoot20ft = 0.85;
+        public static final double autoShootSd = 0.63;
+        
         // Climber
         public static final int winch = 40;
         public static final int ClimbArm = 41;

@@ -5,9 +5,9 @@
 package frc.robot.commands;
 
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.Drive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-//import edu.wpi.first.wpilibj.smartdashboard.*;
+import edu.wpi.first.wpilibj.smartdashboard.*;
 
 /** Creates a command to control the robot drive */
 public class JoystickDrive extends CommandBase {
@@ -36,9 +36,10 @@ public class JoystickDrive extends CommandBase {
   public void execute() {
     speed = RobotContainer.DriverY();
     steer = RobotContainer.DriverX();
+    
     m_subsystem.ArcadeDrive(speed, steer);
-    //SmartDashboard.putNumber("drive speed", speed);
-    //SmartDashboard.putNumber("drive steer", steer);
+    SmartDashboard.putNumber("drive speed", speed);
+    SmartDashboard.putNumber("drive steer", steer);
   }
   // Called once the command ends or is interrupted.
   @Override

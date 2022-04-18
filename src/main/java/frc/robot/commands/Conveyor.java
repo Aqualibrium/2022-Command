@@ -4,55 +4,46 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Drive;
-//import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/** Command to drive the robot in a straight line for 5 seconds*/
-public class AutDrive1 extends CommandBase {     //#region extends CommandBase {
+/** An example command that runs the intake */
+public class Conveyor extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Drive m_subsystem;
-  
-  private double speed, steer;
-  private int counter = 0;
+  private final Intake m_subsystem;
+  private final boolean m_dir;
   /**
-   * Creates a new Autonomous drive command.
+   * Creates a new command to run the intake
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AutDrive1(Drive subsystem) {
+  public Conveyor(Intake subsystem, boolean dir) {
     m_subsystem = subsystem;
-  
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_subsystem);
+    addRequirements(subsystem);
+    m_dir = dir;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    counter = 0;
+    if (m_dir) m_subsystem.onlyConveyor(true);
+    else m_subsystem.onlyConveyor(false);
   }
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    speed = -0.7;
-    steer = 0;
-    m_subsystem.ArcadeDrive(speed, steer);
-  
-    counter += 1;
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    speed = 0;
-    steer = 0;
-    m_subsystem.ArcadeDrive(speed, steer);
+    m_subsystem.stopConveyor();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (counter > 210);
+    return false;
   }
 }

@@ -5,14 +5,12 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Drive;
-//import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** Command to drive the robot in a straight line for 5 seconds*/
-public class AutDrive1 extends CommandBase {     //#region extends CommandBase {
+public class AutDrive2 extends CommandBase {     //#region extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Drive m_subsystem;
-  
   private double speed, steer;
   private int counter = 0;
   /**
@@ -20,9 +18,8 @@ public class AutDrive1 extends CommandBase {     //#region extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AutDrive1(Drive subsystem) {
+  public AutDrive2(Drive subsystem) {
     m_subsystem = subsystem;
-  
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_subsystem);
   }
@@ -38,7 +35,6 @@ public class AutDrive1 extends CommandBase {     //#region extends CommandBase {
     speed = -0.7;
     steer = 0;
     m_subsystem.ArcadeDrive(speed, steer);
-  
     counter += 1;
   }
 
@@ -53,6 +49,6 @@ public class AutDrive1 extends CommandBase {     //#region extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (counter > 210);
+    return (counter > 110);
   }
 }

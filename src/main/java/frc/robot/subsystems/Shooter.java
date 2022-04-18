@@ -14,7 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 public class Shooter extends SubsystemBase {
   VictorSPX lShoot = new VictorSPX(Constants.shootL);
   VictorSPX rShoot = new VictorSPX(Constants.shootR);
-  double speed;
+  private double speed;
   /** Creates a new system to drive the shooter */
   public Shooter() {
     //SmartDashboard.putNumber("Shooter Speed", speed);
@@ -23,24 +23,34 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    speed = SmartDashboard.getNumber("Shooter Speed", RobotContainer.shootSpd);
+    speed = RobotContainer.shootSpd;
+    SmartDashboard.putNumber("Shooter Speed", speed);
   }
-
+  
   public void runShoot(){
     lShoot.set(ControlMode.PercentOutput, speed);
     rShoot.set(ControlMode.PercentOutput, speed);
   }
-
+  public void runShoot(double speed){
+    lShoot.set(ControlMode.PercentOutput, speed);
+    rShoot.set(ControlMode.PercentOutput, speed);
+ 
+  }
+  public void ShootSpeedUp(){
+    speed = RobotContainer.shootSpd;
+  }
+  public void ShootSpeedDown(){
+    speed = RobotContainer.shootSpd;
+  }
   public void reverseShooter(){    
-    lShoot.set(ControlMode.PercentOutput, -0.1);
-    rShoot.set(ControlMode.PercentOutput, -0.1);
+    lShoot.set(ControlMode.PercentOutput, -0.4);
+    rShoot.set(ControlMode.PercentOutput, -0.4);
   }
   
   public void stopShoot(){
     lShoot.set(ControlMode.PercentOutput, 0.0);
     rShoot.set(ControlMode.PercentOutput, 0.0);
   }
-
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation

@@ -4,55 +4,46 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Drive;
-//import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.ShootTilt;
+//import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/** Command to drive the robot in a straight line for 5 seconds*/
-public class AutDrive1 extends CommandBase {     //#region extends CommandBase {
+/** An example command that uses an example subsystem. */
+public class AutoTilt extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Drive m_subsystem;
-  
-  private double speed, steer;
-  private int counter = 0;
+  private final ShootTilt m_subsystem;
+
   /**
-   * Creates a new Autonomous drive command.
+   * Command to zero the shooter tilt. Once the tilt is zeroed, can use
+   * position control to move the shooter
    *
-   * @param subsystem The subsystem used by this command.
+   * @param subsystem - shoot-tilt subsystem
    */
-  public AutDrive1(Drive subsystem) {
+  public AutoTilt(ShootTilt subsystem) {
     m_subsystem = subsystem;
-  
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_subsystem);
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    counter = 0;
+    m_subsystem.clrCal();
+    
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    speed = -0.7;
-    steer = 0;
-    m_subsystem.ArcadeDrive(speed, steer);
-  
-    counter += 1;
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    speed = 0;
-    steer = 0;
-    m_subsystem.ArcadeDrive(speed, steer);
+    //m_subsystem.tiltMove(Constants.autotilt);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (counter > 210);
+    return m_subsystem.isCal();
   }
 }

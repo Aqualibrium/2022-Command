@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 //import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -30,16 +31,34 @@ public class RobotContainer {
   private final ClimbWinch m_winch = new ClimbWinch();
   //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final JoystickDrive JoystickDrive = new JoystickDrive(m_drive);
-  private final SequentialCommandGroup m_autoCommand = new SequentialCommandGroup(new AutDrive1(m_drive),
-         new AutoShoot(m_shooter, m_intake));
+  //private final SequentialCommandGroup m_autoCommand = new SequentialCommandGroup(new AutDrive1(m_drive),
+  //       new AutoShoot(m_shooter, m_intake));
+  private final SequentialCommandGroup m_autoCommand = 
+  new SequentialCommandGroup(    // Autocommand
+          new ShootMv(m_tilt, Constants.tilt1),  
+          new AutoShoot(m_shooter, m_intake),  
+           new ParallelCommandGroup(new AutDrive1(m_drive), 
+              new AutoArm(m_intake)),
+       // Move robot
+         //new ShootMv(m_tilt, Constants.autotilt),        // aim shooter
+        //new SetShootSpeed(66.0),
+
+         new AutoIntake(m_intake), // get new ball
+         new ShootMv(m_tilt, Constants.autotilt),
+         new SetShootSpeed(Constants.autoShootSd),
+         new AutoShoot(m_shooter, m_intake),   // shoot again
+         new AutDrive2(m_drive));         // drive 2 feet
+  
   
   // motor speed variables
-  public static double shootSpd = 0.7;
+  public static double shootSpd = 0.71;
   public static double conveySpd = 0.7;
   public static double elevateSpd = 0.45;
+  public static int shootAngle = 0;
 
     //Driver gamepad
   final static Joystick drvStick = new Joystick(Constants.drvStick);
+  final static Joystick LdrvStick = new Joystick(Constants.drvStick);
   final JoystickButton drA = new JoystickButton(drvStick, Constants.drA);
   final JoystickButton drB = new JoystickButton(drvStick, Constants.drB);
   final JoystickButton drY = new JoystickButton(drvStick, Constants.drY);
@@ -48,6 +67,8 @@ public class RobotContainer {
   //final JoystickButton drRT = new JoystickButton(drvStick, Constants.drX);
   final JoystickButton drLB = new JoystickButton(drvStick, Constants.drLB);
   final JoystickButton drRB = new JoystickButton(drvStick, Constants.drRB);
+  final JoystickButton drLT = new JoystickButton(drvStick, Constants.drLT);
+  final JoystickButton drRT = new JoystickButton(drvStick, Constants.drRT);
   // Operator gamepad
   final static Joystick opStick = new Joystick(Constants.opStick);
   final JoystickButton op1 = new JoystickButton(opStick, Constants.op1);
@@ -75,9 +96,9 @@ public class RobotContainer {
   final JoystickButton op23 = new JoystickButton(opStick, Constants.op23);
   final JoystickButton op24 = new JoystickButton(opStick, Constants.op24);
   final JoystickButton op25 = new JoystickButton(opStick, Constants.op25);
-  final JoystickButton op26 = new JoystickButton(opStick, Constants.op26);
-  final JoystickButton op27 = new JoystickButton(opStick, Constants.op27);
-  final JoystickButton op28 = new JoystickButton(opStick, Constants.op28);
+  final JoystickButton op26 = new JoystickButton(opStick, Constants.op26);  // thumbwheel forward
+  final JoystickButton op27 = new JoystickButton(opStick, Constants.op27);  // thumbwheel reverse
+  final JoystickButton op28 = new JoystickButton(opStick, Constants.op28);  // thumbwheel press
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -100,43 +121,48 @@ public class RobotContainer {
     /*
      These commands are place holders for when we have commands
     */
-    drA.whileHeld(new IntakeIn(m_intake));    // nitro
-    drB.whileHeld(new ElevatorReverse(m_intake));  // not assigned
+    //drA.whileHeld(new IntakeIn(m_intake));    // nitro
+    //drB.whileHeld(new ElevatorReverse(m_intake));  // turtle button
     //drX.whenPressed(new TiltShooter(m_tilt));  // not assigned
     drRB.whileHeld(new ShootElevate(m_shooter, m_intake)); // shoot
+    drRB.whenReleased(new IntakeRelease(m_intake));
     drLB.whileHeld(new IntakeIn(m_intake));         // intake
-
+    
     // Operator commands
     op1.whileHeld(new ShootUp(m_tilt));   // tilt up (reverse of current)
     op6.whileHeld(new ShootDn(m_tilt));   // tilt down (reverse of current)
-    op2.whileHeld(new WinchIn(m_winch));  // not assigned
-    op7.whileHeld(new WinchOut(m_winch));  // not assigned
-    op3.whileHeld(new ArmForward(m_winch));  // not assigned
-    op8.whileHeld(new ArmBack(m_winch));   // not assigned
+    op2.whileHeld(new IntakeArmUp(m_intake));  // drive intake arm up
+    op7.whileHeld(new IntakeArmDn(m_intake));  // drive intake arm down
+    op3.whileHeld(new Conveyor(m_intake, true));  // conveyor only drive in
+    op8.whileHeld(new Conveyor(m_intake, false));   // conveyor only drive out
     op4.whileHeld(new ArmForward(m_winch));
     op9.whileHeld(new ArmBack(m_winch));
     op5.whileHeld(new WinchOut(m_winch));
     op10.whileHeld(new WinchIn(m_winch));
 
-    //op11.whenPressed(new RunArm(s_arm, Constants.armVertical)); // Shooter home rev
-    //op12.whenPressed(new RunArm(s_arm, Constants.arm10ft)); // forward 5 ft
-    //op13.whenPressed(new RunArm(s_arm, Constants.armDown)); // forward 10 ft
-    //op14.whenPressed(new RunArm(s_arm, Constants.arm15ft)); // forward 15 ft
-    //op15.whenPressed(new RunArm(s_arm, Constants.armHome));  // forward 20 ft
-    //op16.whenPressed(new RunArm(s_arm, Constants.arm20ft)); // range 20 ft
-    /*op17.whileHeld(new SequentialCommandGroup(new RunArm(s_arm, Constants.armDown),
-      new RunIntake(m_intake, 0.75))); */
-    //op18.whileHeld(new RunIntake(m_intake, -0.75));
+    op11.whenPressed(new ShootMv(m_tilt, Constants.tilt1));
+    op11.whenPressed(new SetShootSpeed(0.4)); // Shooter home rev
+    op12.whenPressed(new ShootMv(m_tilt, Constants.tilt1)); // forward 5 ft
+    op12.whenPressed(new SetShootSpeed(0.63));
+    op13.whenPressed(new ShootMv(m_tilt, Constants.tilt2)); // forward 10 ft
+    op13.whenPressed(new SetShootSpeed(0.73));
+    op14.whenPressed(new ShootMv(m_tilt, Constants.tilt3)); // forward 15 ft
+    op15.whenPressed(new ShootMv(m_tilt, Constants.tilt4));  // forward 20 ft
+    op16.whenPressed(new ShootMv(m_tilt, Constants.tilt5)); // range 20 ft
+    op17.whenPressed(new IntakeArmUp(m_intake));
+    op19.whenPressed(new IntakeArmDn(m_intake));
     //op19.whileHeld(new RunShwoopShooter(m_shoot, 0.8));
     //op19.whileHeld(new RunShwoopShooter(m_shoot));
     //op20.whileHeld(new LimelightAim(m_drive, m_limelight));
-    //op21.whileHeld(new RunShwoopShooter(m_shwoop, m_shoot, 0.9));
+    op21.whenPressed(new AutoTilt(m_tilt));
     //op22.whenPressed(new IncShoot(m_shoot, 0.03));
     //op23.whenPressed(new IncShoot(m_shoot, -0.03));
     //op24.whenPressed(new StopArm(s_arm));   // arm stops right away
     op22.whileHeld(new ShooterRev(m_shooter));    // reverse shooter
     op23.whileHeld(new ElevatorReverse(m_intake));      // reverse elevator
     op24.whileHeld(new IntakeOut(m_intake));       //reverse intake
+    op26.whenPressed(new ShootSpeedUp());
+    op27.whenPressed(new ShootSpeedDown());
   }
 
   /**
@@ -161,18 +187,19 @@ public class RobotContainer {
   public static boolean DriverButtonA(){
     return drvStick.getRawButton(1);
   }
-
+ 
+  
   // A button -> turtle
   public static boolean DriverButtonB(){
     return drvStick.getRawButton(2);
   }
 
   public static double DriverLT() {    // slow turn left
-    return drvStick.getRawAxis(2);
+    return drvStick.getRawAxis(1);
   }
 
-  public static double DriverRT() {    // slow turn right
-    return drvStick.getRawAxis(3);
+  public static double DriverRT(){
+    return drvStick.getRawAxis(2);
   }
 
   //public static double ArmY() {    // operator joystick

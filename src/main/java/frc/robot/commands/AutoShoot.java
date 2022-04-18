@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -13,6 +14,8 @@ public class AutoShoot extends CommandBase {     //#region extends CommandBase {
   private final Shooter m_subsystem;
   private final Intake m_subsystem1;
   private int counter = 0;
+  
+  private double m_speed = Constants.autoShootSd;
   /**
    * Creates a new Autonomous drive command.
    *
@@ -29,7 +32,7 @@ public class AutoShoot extends CommandBase {     //#region extends CommandBase {
   @Override
   public void initialize() {
     counter = 0;
-    m_subsystem.runShoot();
+    m_subsystem.runShoot(m_speed);
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -40,11 +43,14 @@ public class AutoShoot extends CommandBase {     //#region extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_subsystem1.stopElevator();
+    m_subsystem.stopShoot();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (counter > 200);
+    return (counter > 120);
   }
 }

@@ -29,8 +29,6 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //inSpd = SmartDashboard.getNumber("Intake Speed", RobotContainer.conveySpd);
-    //upSpd = SmartDashboard.getNumber("Elevator Speed", RobotContainer.elevateSpd);
   }
 
   /**
@@ -40,6 +38,9 @@ public class Intake extends SubsystemBase {
     conveyor.set(ControlMode.PercentOutput, RobotContainer.conveySpd);
   }
 
+  /**
+   * runs the conveyor only
+   */
   public void runIntake(){
     intake.set(ControlMode.PercentOutput, Constants.intakeSpd);
   }
@@ -65,7 +66,7 @@ public class Intake extends SubsystemBase {
    * @param dir - true for forward, false for reverse
    */
   public void onlyConveyor(boolean dir){
-    if (dir) conveyor.set(ControlMode.PercentOutput, 0.5);
+    if (dir) conveyor.set(ControlMode.PercentOutput, Constants.intakeSpd);
     else     conveyor.set(ControlMode.PercentOutput, -0.5);
 
   }
@@ -77,7 +78,9 @@ public class Intake extends SubsystemBase {
     elevator.set(ControlMode.PercentOutput, RobotContainer.elevateSpd);
   }
 
-  /** runs the elevator in reverse */
+  /** 
+   * runs the elevator in reverse 
+   */
   public void revElevator(){
     elevator.set(ControlMode.PercentOutput, -(RobotContainer.elevateSpd/2));
   }
@@ -109,12 +112,21 @@ public class Intake extends SubsystemBase {
   }
   
   public boolean isArmUp(){
-    return (intakeArm.isFwdLimitSwitchClosed() == 1);
+    if (intakeArm.isFwdLimitSwitchClosed() == 1){
+      intakeArm.set(ControlMode.Disabled, 0.0);
+      return true;
+    }
+    else return false;
   }
 
   public boolean isArmDn(){
-    return (intakeArm.isRevLimitSwitchClosed() == 1);
+    if (intakeArm.isRevLimitSwitchClosed() == 1){
+            intakeArm.set(ControlMode.Disabled, 0.0);
+      return true;
+    }
+    else return false;
   }
+  
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation

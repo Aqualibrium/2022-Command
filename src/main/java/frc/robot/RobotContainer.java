@@ -57,8 +57,8 @@ public class RobotContainer {
   public static int shootAngle = 0;
 
     //Driver gamepad
-  final static Joystick drvStick = new Joystick(Constants.drvStick);
-  final static Joystick LdrvStick = new Joystick(Constants.drvStick);
+  final static Joystick drvStick = new Joystick(Constants.drvStick);  // driver controller
+  //final static Joystick LdrvStick = new Joystick(Constants.drvStick);
   final JoystickButton drA = new JoystickButton(drvStick, Constants.drA);
   final JoystickButton drB = new JoystickButton(drvStick, Constants.drB);
   final JoystickButton drY = new JoystickButton(drvStick, Constants.drY);
@@ -70,7 +70,7 @@ public class RobotContainer {
   final JoystickButton drLT = new JoystickButton(drvStick, Constants.drLT);
   final JoystickButton drRT = new JoystickButton(drvStick, Constants.drRT);
   // Operator gamepad
-  final static Joystick opStick = new Joystick(Constants.opStick);
+  final static Joystick opStick = new Joystick(Constants.opStick);  // operator controller
   final JoystickButton op1 = new JoystickButton(opStick, Constants.op1);
   final JoystickButton op2 = new JoystickButton(opStick, Constants.op2);
   final JoystickButton op3 = new JoystickButton(opStick, Constants.op3);
@@ -103,7 +103,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     m_drive.setDefaultCommand(JoystickDrive);
-    UsbCamera camera = CameraServer.startAutomaticCapture("Right", 0);
+    UsbCamera camera = CameraServer.startAutomaticCapture("Right", 0);    // set up usb cameras
     UsbCamera cameraL = CameraServer.startAutomaticCapture("Left", 1);
     camera.setResolution(320, 200);
     cameraL.setResolution(320, 200);
@@ -125,8 +125,8 @@ public class RobotContainer {
     //drB.whileHeld(new ElevatorReverse(m_intake));  // turtle button
     //drX.whenPressed(new TiltShooter(m_tilt));  // not assigned
     drRB.whileHeld(new ShootElevate(m_shooter, m_intake)); // shoot
-    drRB.whenReleased(new IntakeRelease(m_intake));
-    drLB.whileHeld(new IntakeIn(m_intake));         // intake
+    //drRB.whenReleased(new IntakeRelease(m_intake));
+    drLB.whileHeld(new IntakeIn(m_intake));         // run intake
     
     // Operator commands
     op1.whileHeld(new ShootUp(m_tilt));   // tilt up (reverse of current)
@@ -135,19 +135,19 @@ public class RobotContainer {
     op7.whileHeld(new IntakeArmDn(m_intake));  // drive intake arm down
     op3.whileHeld(new Conveyor(m_intake, true));  // conveyor only drive in
     op8.whileHeld(new Conveyor(m_intake, false));   // conveyor only drive out
-    op4.whileHeld(new ArmForward(m_winch));
-    op9.whileHeld(new ArmBack(m_winch));
-    op5.whileHeld(new WinchOut(m_winch));
-    op10.whileHeld(new WinchIn(m_winch));
+    op4.whileHeld(new ArmForward(m_winch));   // move climb arm forward
+    op9.whileHeld(new ArmBack(m_winch));      // move climb arm back
+    op5.whileHeld(new WinchOut(m_winch));     // climber out
+    op10.whileHeld(new WinchIn(m_winch));     // climber in
 
-    op11.whenPressed(new ShootMv(m_tilt, Constants.tilt1));
-    op11.whenPressed(new SetShootSpeed(0.4)); // Shooter home rev
-    op12.whenPressed(new ShootMv(m_tilt, Constants.tilt1)); // forward 5 ft
-    op12.whenPressed(new SetShootSpeed(0.63));
-    op13.whenPressed(new ShootMv(m_tilt, Constants.tilt2)); // forward 10 ft
-    op13.whenPressed(new SetShootSpeed(0.73));
-    op14.whenPressed(new ShootMv(m_tilt, Constants.tilt3)); // forward 15 ft
-    op15.whenPressed(new ShootMv(m_tilt, Constants.tilt4));  // forward 20 ft
+    op11.whenPressed(new ParallelCommandGroup(new ShootMv(m_tilt, Constants.tilt1),
+              new SetShootSpeed(0.4))); // Shooter home re
+    op12.whenPressed(new ParallelCommandGroup(new ShootMv(m_tilt, Constants.tilt1), // forward 5 ft
+              new SetShootSpeed(0.63)));
+    op13.whenPressed(new ParallelCommandGroup(new ShootMv(m_tilt, Constants.tilt2), // forward 10 ft
+              new SetShootSpeed(0.73)));
+    op14.whenPressed(new ParallelCommandGroup(new ShootMv(m_tilt, Constants.tilt3), // forward 15 ft
+              new ShootMv(m_tilt, Constants.tilt4)));  // forward 20 ft
     op16.whenPressed(new ShootMv(m_tilt, Constants.tilt5)); // range 20 ft
     op17.whenPressed(new IntakeArmUp(m_intake));
     op19.whenPressed(new IntakeArmDn(m_intake));

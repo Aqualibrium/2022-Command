@@ -83,10 +83,15 @@ public final class Constants {
         public static final double shoot5ft = 0.65;
         public static final int autotilt = -16;
         public static final int tilt1 = -27;
+        public static final double shoot1 = 0.63;
         public static final int tilt2 = -20;
+        public static final double shoot2 = 0.73;
         public static final int tilt3 = -43;
+        public static final double shoot3 = 0.73;
         public static final int tilt4 = -47;
+        public static final double shoot4 = 0.73;
         public static final int tilt5 = -16;
+        public static final double shoot5 = 0.73;
         public static final double shoot10ft = 0.70;
         public static final double shoot15ft = 0.78;
         public static final double shoot20ft = 0.85;

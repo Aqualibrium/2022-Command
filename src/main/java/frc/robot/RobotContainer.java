@@ -140,24 +140,15 @@ public class RobotContainer {
     op5.whileHeld(new WinchOut(m_winch));     // climber out
     op10.whileHeld(new WinchIn(m_winch));     // climber in
 
-    op11.whenPressed(new ParallelCommandGroup(new ShootMv(m_tilt, Constants.tilt1),
-              new SetShootSpeed(0.4))); // Shooter home re
-    op12.whenPressed(new ParallelCommandGroup(new ShootMv(m_tilt, Constants.tilt1), // forward 5 ft
-              new SetShootSpeed(0.63)));
-    op13.whenPressed(new ParallelCommandGroup(new ShootMv(m_tilt, Constants.tilt2), // forward 10 ft
-              new SetShootSpeed(0.73)));
-    op14.whenPressed(new ParallelCommandGroup(new ShootMv(m_tilt, Constants.tilt3), // forward 15 ft
-              new ShootMv(m_tilt, Constants.tilt4)));  // forward 20 ft
-    op16.whenPressed(new ShootMv(m_tilt, Constants.tilt5)); // range 20 ft
+    op11.whenPressed(new ShootMv(m_tilt, Constants.tilt1, Constants.shoot1));
+    op12.whenPressed(new ShootMv(m_tilt, Constants.tilt1, Constants.shoot1));
+    op13.whenPressed(new ShootMv(m_tilt, Constants.tilt2, Constants.shoot2));
+    op14.whenPressed(new ShootMv(m_tilt, Constants.tilt3, Constants.shoot3));
+    op15.whenPressed(new ShootMv(m_tilt, Constants.tilt4, Constants.shoot4));
+    op16.whenPressed(new ShootMv(m_tilt, Constants.tilt5, Constants.shoot5));
     op17.whenPressed(new IntakeArmUp(m_intake));
     op19.whenPressed(new IntakeArmDn(m_intake));
-    //op19.whileHeld(new RunShwoopShooter(m_shoot, 0.8));
-    //op19.whileHeld(new RunShwoopShooter(m_shoot));
-    //op20.whileHeld(new LimelightAim(m_drive, m_limelight));
     op21.whenPressed(new AutoTilt(m_tilt));
-    //op22.whenPressed(new IncShoot(m_shoot, 0.03));
-    //op23.whenPressed(new IncShoot(m_shoot, -0.03));
-    //op24.whenPressed(new StopArm(s_arm));   // arm stops right away
     op22.whileHeld(new ShooterRev(m_shooter));    // reverse shooter
     op23.whileHeld(new ElevatorReverse(m_intake));      // reverse elevator
     op24.whileHeld(new IntakeOut(m_intake));       //reverse intake

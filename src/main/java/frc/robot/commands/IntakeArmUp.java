@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class IntakeArmUp extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake m_subsystem;
-  private int counter;
   /**
    * Creates a new command to run the intake
    *
@@ -27,13 +26,11 @@ public class IntakeArmUp extends CommandBase {
   @Override
   public void initialize() {
     m_subsystem.moveIntakeUp();
-    counter = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    counter += 1;
   }
 
   // Called once the command ends or is interrupted.
@@ -45,6 +42,6 @@ public class IntakeArmUp extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_subsystem.isArmUp()) || (counter >= 80);
+    return m_subsystem.isArmUp();
   }
 }
